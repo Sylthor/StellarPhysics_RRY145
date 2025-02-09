@@ -21,12 +21,14 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
     - (Boolean) loglog: Use loglog scales for the axis.
     - (Boolean) scatter: Use scatter plots.
     '''
+    absolute_path = os.path.dirname(__file__)
+    relative_path = fileDirectory
+    full_path = os.path.join(absolute_path, relative_path)
 
     if detailed==False:
-        xlabel = ""
         dataInstances = [xvalues,yvalues]
         plotLabels = []
-        f = open(fileDirectory+"\\summary.txt", "r")
+        f = open(full_path+"\\summary.txt", "r")
         data = f.read().split("\n")
         x = getColumn(data,xvalues-1)
         y = getColumn(data,yvalues-1)
@@ -91,7 +93,7 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
         else:
             plt.plot(x,y)
     if detailed==True:
-        f = open(fileDirectory+"\\structure_"+str(f'{timeIndex:05}')+".txt", "r")
+        f = open(full_path+"\\structure_"+str(f'{timeIndex:05}')+".txt", "r")
         data = f.read().split("\n")
         x = getColumn(data,xvalues-1)
         y = getColumn(data,yvalues-1)
@@ -106,9 +108,10 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
         else:
             plt.plot(x,y)
 # ------------ Add graphs here ------------ #
-addPlot("M=5, Z=0,03",False,2,21,scatter=True,xlog=True,ylog=True,flipXaxis=False)
+import os
+# addPlot("M=5, Z=0,03",False,2,21,scatter=True,xlog=True,ylog=True,flipXaxis=False)
 
 # Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
-# addPlot("M=5, Z=0,03",False,6,4,scatter=False,flipXaxis=True)
+addPlot("M=5, Z=0,02",True,6,4,scatter=False,flipXaxis=True)
 # ------------------------ #
 plt.show()
