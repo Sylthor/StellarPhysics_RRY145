@@ -3,23 +3,34 @@
 # Here are the instructions:
 # - 1) Depending on
 
+
+# IMPORTANT NOTES!!!
+# - M=5, Z=0,0003 does NOT display values correctly. 1-X+Y=0,001 for some reason.
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
+# s = [1,2,3,4,5,6,7]
+# a = 0
+# b = 1
+# print(s[:b][a:])
 
 # Reads the data file, and stores each time index as a separate line in a list.
 def getColumn(data,data_entry_index):
         # Extracts the column of the data file with list comprehension, and converts them to floats
         return [float(line.split()[data_entry_index]) for line in data if len(line.split()) > data_entry_index]
-def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=False,scatter=False,flipXaxis=False):
+def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,singelTimeInstance=False,xlog=False,ylog=False,scatter=False,flipXaxis=False):
     '''
     - (String) fileDirectory: Path to the folder where all files are.
     - (Boolean) detailed: Use detailed data structure or not?
     - (int) xvalues: Extracts values corresponding to the integer according to website instructions.
     - (int) yvalues: Extracts values corresponding to the integer according to website instructions.
     - (int) timeIndex: Use specific time index IF DETAILED==True.
-    - (Boolean) loglog: Use loglog scales for the axis.
+    - (Boolean) singelTimeInstance: Use only one instance IF DETAILED==False.
+    - (Boolean) xlog:
+    - (Boolean) ylog:
     - (Boolean) scatter: Use scatter plots.
+    - (Boolean) flipXaxis:
     '''
     absolute_path = os.path.dirname(__file__)
     relative_path = fileDirectory
@@ -30,8 +41,24 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
         plotLabels = []
         f = open(full_path+"\\summary.txt", "r")
         data = f.read().split("\n")
-        x = getColumn(data,xvalues-1)
-        y = getColumn(data,yvalues-1)
+        x = 0
+        y = 0
+        if(xvalues <30):
+            x = getColumn(data,xvalues-1)
+        if(xvalues==30):
+            # Gets metallicity
+            x = 1-np.array(getColumn(data,11-1))-np.array(getColumn(data,12-1))
+        if(yvalues <30):
+            y = getColumn(data,yvalues-1)
+        if(yvalues==30):
+            # Gets metallicity
+            x = 1-np.array(getColumn(data,11-1))-np.array(getColumn(data,12-1))
+        if singelTimeInstance==True:
+            x = x[timeIndex]
+            y = y[timeIndex]
+        # if timeIndex != [-1,-1]:
+        #     x = x[:]
+        #     y = y[:]
         for i in range(2):
             if dataInstances[i]==1:
                 plotLabels.append("Step number [1]")
@@ -64,17 +91,36 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
             if dataInstances[i]==15:
                 plotLabels.append("Central Oxygen Mass Fraction $X_{O,c}$ [1]")
             if dataInstances[i]==16:
-                plotLabels.append("Dynamical Timescale $\tau_{dyn}$ [seconds]")
+                plotLabels.append(r"Dynamical Timescale $\tau_{dyn}$ [seconds]")
             if dataInstances[i]==17:
-                plotLabels.append("Kelvin-Helmholtz Timescale $\tau_{KH}$ [years]")
+                plotLabels.append(r"Kelvin-Helmholtz Timescale $\tau_{KH}$ [years]")
             if dataInstances[i]==18:
-                plotLabels.append("Nuclear Timescale $\tau_{nuc}$ [years]")
+                plotLabels.append(r"Nuclear Timescale $\tau_{nuc}$ [years]")
             if dataInstances[i]==19:
                 plotLabels.append("Luminosity from PP Chain $L_{PP}$ [$L_\odot$]")
             if dataInstances[i]==20:
                 plotLabels.append("Luminosity from CNO Cycle $L_{CNO}$ [$L_\odot$]")
             if dataInstances[i]==21:
                 plotLabels.append(r"Luminosity from $3\alpha$ reactions $L_{3\alpha}$ [$L_\odot$]")
+            if dataInstances[i]==22:
+                plotLabels.append("Luminosity from Metal Burning $L_{Z}$ [$L_\odot$]")
+            if dataInstances[i]==23:
+                plotLabels.append("Luminosity from Neutrino Losses $L_{v}$ [$L_\odot$]")
+            if dataInstances[i]==24:
+                plotLabels.append("Mass of Helium Core $M_{He}$ [$M_\odot$]")
+            if dataInstances[i]==25:
+                plotLabels.append("Mass of Carbon Core $M_{C}$ [$M_\odot$]")
+            if dataInstances[i]==26:
+                plotLabels.append("Mass of Oxygen Core $M_{O}$ [$M_\odot$]")
+            if dataInstances[i]==27:
+                plotLabels.append("Radius of Helium Core $R_{He}$ [$R_\odot$]")
+            if dataInstances[i]==28:
+                plotLabels.append("Radius of Carbon Core $R_{C}$ [$R_\odot$]")
+            if dataInstances[i]==29:
+                plotLabels.append("Radius of Oxygen Core $R_{O}$ [$R_\odot$]")
+            # ------------ Metallicity is not strictly in the files ------------
+            if dataInstances[i]==30:
+                plotLabels.append("Central Metallicity Mass Fraction $Z_c$ [1]")
         M = getColumn(data,3-1)[0]
         Z = 1-getColumn(data,11-1)[0]-getColumn(data,12-1)[0]
         print("M =",M)
@@ -109,9 +155,20 @@ def addPlot(fileDirectory,detailed,xvalues,yvalues,timeIndex=0,xlog=False,ylog=F
             plt.plot(x,y)
 # ------------ Add graphs here ------------ #
 import os
-# addPlot("M=5, Z=0,03",False,2,21,scatter=True,xlog=True,ylog=True,flipXaxis=False)
+## Test plot, make no conclusions from this
+# addPlot("ezweb_29007",False,2,18,scatter=False)
+# addPlot("M=5, Z=0,001",False,2,18,scatter=False)
+# addPlot("M=5, Z=0,0003",False,2,18,scatter=False)
+# addPlot("M=5, Z=0,0001",False,2,18,scatter=False)
+# plt.show()
 
-# Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
-addPlot("M=5, Z=0,02",True,6,4,scatter=False,flipXaxis=True)
-# ------------------------ #
+## M=constant=5, grid of metallicities
+Z = ["0,0001","0,0003","0,001","0,004","0,01"]
+for z in Z:
+    addPlot("M=5, Z="+z,False,30,7,singelTimeInstance=True,timeIndex=2,scatter=True)
 plt.show()
+## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
+# addPlot("M=5, Z=0,02",False,6,4,scatter=False,flipXaxis=True)
+# plt.show()
+
+# ------------------------ #
