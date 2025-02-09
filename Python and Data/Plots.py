@@ -23,7 +23,7 @@ def addPlot(fileDirectory,detailed,xvalues,
             yvalues,ax,timeIndex=0,
             singelTimeInstance=False,xlog=False,ylog=False,
             scatter=False,flipXaxis=False,customX=[-1],
-            legend="",color="orange"):
+            legendText="",color="orange"):
     '''
     - (String) fileDirectory: Path to the folder where all files are.
     - (Boolean) detailed: Use detailed data structure or not?
@@ -202,9 +202,9 @@ def addPlot(fileDirectory,detailed,xvalues,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y)
+            ax.scatter(x,y,label=legendText)
         else:
-            ax.plot(x,y)
+            ax.plot(x,y,label=legendText)
     if detailed==True:
         f = open(full_path+"\\structure_"+str(f'{timeIndex:05}')+".txt", "r")
         data = f.read().split("\n")
@@ -297,9 +297,9 @@ def addPlot(fileDirectory,detailed,xvalues,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y)
+            ax.scatter(x,y,label=legendText)
         else:
-            ax.plot(x,y)
+            ax.plot(x,y,label=legendText)
 # ------------ Add graphs here ------------ #
 ## Test plot, make no conclusions from this
 # fig, ax = plt.subplots(1,1,figsize=(5, 5),sharex=True)
@@ -308,58 +308,60 @@ def addPlot(fileDirectory,detailed,xvalues,
 # plt.show()
 
 ## M=constant=5, grid of metallicities
-# Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
-# fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
-# plt.subplots_adjust(wspace=0,hspace=0)
-# for i in range(len(Z)):
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=7,
-#             ax=ax[0],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=True,
-#             scatter=True,
-#             customX=Z[i])
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=8,
-#             ax=ax[1],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=True,
-#             scatter=True,
-#             customX=Z[i])
-# ax[0].set_xlabel('')
-# plt.savefig('Metallicity vs T_c, rho_c, grid, M=5.png',bbox_inches='tight',transparent=True)
-# fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
-# plt.subplots_adjust(wspace=0,hspace=0)
-# for i in range(len(Z)):
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=4,
-#             ax=ax[0],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=True,
-#             scatter=True,
-#             customX=Z[i])
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=6,
-#             ax=ax[1],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=True,
-#             scatter=True,
-#             customX=Z[i])
-# ax[0].set_xlabel('')
-# plt.savefig('Metallicity vs L, T_s, grid, M=5.png',bbox_inches='tight',transparent=True)
+Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
+fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
+plt.subplots_adjust(wspace=0,hspace=0)
+for i in range(len(Z)):
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=7,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=True,
+            scatter=True,
+            customX=Z[i])
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=8,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=True,
+            scatter=True,
+            customX=Z[i])
+ax[0].set_xlabel('')
+plt.savefig('Metallicity vs T_c, rho_c, grid, M=5.png',bbox_inches='tight',transparent=True)
+fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
+plt.subplots_adjust(wspace=0,hspace=0)
+for i in range(len(Z)):
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=4,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=True,
+            scatter=True,
+            customX=Z[i])
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=6,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=True,
+            scatter=True,
+            customX=Z[i])
+ax[0].set_xlabel('')
+plt.legend()
+plt.savefig('Metallicity vs L, T_s, grid, M=5.png',bbox_inches='tight',transparent=True)
 
 ## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
-fig, ax = plt.subplots(1,1,figsize=(8, 6),sharex=True)
-plt.subplots_adjust(wspace=0,hspace=0)
-addPlot("M=5, Z=0.02",False,6,4,ax=ax,scatter=False,flipXaxis=True)
-plt.show()
+# fig, ax = plt.subplots(1,1,figsize=(8, 6),sharex=True)
+# plt.subplots_adjust(wspace=0,hspace=0)
+# addPlot("M=5, Z=0.02",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="AAA")
+# plt.legend()
+# plt.show()
 
 # ------------------------ #
