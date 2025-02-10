@@ -1,14 +1,17 @@
 # Dear best Stellar Physics crew,
 # This script should be able to generate the plots for our project.
-# Here are the instructions:
-# - 1) Depending on
+# Instructions to generate a plot:
+#   1) Add "ax = setupPlots(...)"
+#   2) Add as many add plots as you want, even in the same subplot window, with addPlot(...)
+#   3) Finalize with endPlots(...) to display window, and save plot file.
 
 
 # IMPORTANT NOTES!!!
-# - M=5, Z=0,0003 does NOT display values correctly. 1-X+Y=0,001 for some reason.
+# - Z=0,0003 does NOT display values correctly. 1-X+Y=0,001 for some reason.
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
 plt.rcParams.update({'font.size': 16})
 plt.rcParams.update({
     "font.family": "serif",  # Use a serif font
@@ -17,25 +20,75 @@ plt.rcParams.update({
 
 # Reads the data file, and stores each time index as a separate line in a list.
 def getColumn(data,data_entry_index):
-        # Extracts the column of the data file with list comprehension, and converts them to floats
-        return [float(line.split()[data_entry_index]) for line in data if len(line.split()) > data_entry_index]
-def addPlot(fileDirectory,detailed,xvalues,
-            yvalues,ax,timeIndex=0,
-            singelTimeInstance=False,xlog=False,ylog=False,
-            scatter=False,flipXaxis=False,customX=[-1],
-            legendText="",color="orange"):
-    '''
-    - (String) fileDirectory: Path to the folder where all files are.
-    - (Boolean) detailed: Use detailed data structure or not?
-    - (int) xvalues: Extracts values corresponding to the integer according to website instructions.
-    - (int) yvalues: Extracts values corresponding to the integer according to website instructions.
-    - (int) timeIndex: Use specific time index IF DETAILED==True.
-    - (Boolean) singelTimeInstance: Use only one instance IF DETAILED==False.
-    - (Boolean) xlog:
-    - (Boolean) ylog:
-    - (Boolean) scatter: Use scatter plots.
-    - (Boolean) flipXaxis:
-    '''
+    """
+    Extracts all data in a column of the data file.
+
+    Args:
+        - (String) data: The data file from the text file, splitted for each line.
+        - (int) data_entry_index: The index of the column to extract.
+    """
+    return [float(line.split()[data_entry_index]) for line in data if len(line.split()) > data_entry_index]
+def setupPlots(horizontal,vertical):
+    """
+    Creates a standardized setup for the plots with a good aspect ration for Overleaf.
+    Here one can specify the number of subplots in the image.
+
+    Args:
+        - (int) Number of horizontal subplots.
+        - (int) Number of vertical subplots.
+    """
+    fig, ax = plt.subplots(vertical,horizontal,figsize=(8,6),sharex=True)
+    plt.subplots_adjust(wspace=0,hspace=0)
+    if(horizontal+vertical>2):
+        ax = ax.flatten()
+        return ax
+    else:
+        return ax
+def endPlots(fileName):
+    """
+    Finalizes and saves the plot as a image file.
+    
+    Args:
+        - (String) filename: Specify the name under which the file should be saved as. Do not include ".png"!
+    """
+    legend = plt.legend(fancybox=False, edgecolor="black")
+    legend.get_frame().set_linewidth(0.5)
+    plt.savefig(fileName+".png",bbox_inches='tight',transparent=True)
+    plt.show()
+def addPlot(fileDirectory,
+            detailed,
+            xvalues,
+            yvalues,
+            ax,
+            timeIndex=0,
+            singelTimeInstance=False,
+            xlog=False,
+            ylog=False,
+            scatter=False,
+            flipXaxis=False,
+            customX=[-1],
+            legendText="",
+            color="tab:blue"):
+    """
+    Generates the plots using the data files. Specify information and the plots will be drawn.
+    A lot of the parameters are optional here.
+    
+    Args:
+        - (String) fileDirectory: Path to the folder where all files are.
+        - (Boolean) detailed: Use detailed data structure or not?
+        - (int) xvalues: Extracts values corresponding to the integer according to website instructions.
+        - (int) yvalues: Extracts values corresponding to the integer according to website instructions.
+        - (Object) ax: The Pyplot window to display graphs in.
+        - (int) timeIndex: Use specific time index IF DETAILED==True.
+        - (Boolean) singelTimeInstance: Use only one time instance IF DETAILED==False.
+        - (Boolean) xlog: Display the x-axis in log scale.
+        - (Boolean) ylog: Display the y-axis in log scale.
+        - (Boolean) scatter: Use scatter plots.
+        - (Boolean) flipXaxis: Flip the x-axis (Useful for HR diagrams).
+        - (List[]) customX: Use a custom x-axis (Useful for task 3.2).
+        - (String) legendText, Specify the legend text.
+        - (String) Color of the plots.
+    """
     absolute_path = os.path.dirname(__file__)
     relative_path = fileDirectory
     full_path = os.path.join(absolute_path, relative_path)
@@ -202,9 +255,9 @@ def addPlot(fileDirectory,detailed,xvalues,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y,label=legendText)
+            ax.scatter(x,y,label=legendText,color=color)
         else:
-            ax.plot(x,y,label=legendText)
+            ax.plot(x,y,label=legendText,color=color)
     if detailed==True:
         f = open(full_path+"\\structure_"+str(f'{timeIndex:05}')+".txt", "r")
         data = f.read().split("\n")
@@ -297,20 +350,20 @@ def addPlot(fileDirectory,detailed,xvalues,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y,label=legendText)
+            ax.scatter(x,y,label=legendText,color=color)
         else:
-            ax.plot(x,y,label=legendText)
+            ax.plot(x,y,label=legendText,color=color)
 # ------------ Add graphs here ------------ #
-## Test plot, make no conclusions from this
-# fig, ax = plt.subplots(1,1,figsize=(5, 5),sharex=True)
-# addPlot("M=5, Z=0.001",True,1,28,ax=ax,scatter=False)
-# plt.savefig('Test, M=5.png',bbox_inches='tight',transparent=True)
-# plt.show()
+## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
+ax = setupPlots(horizontal=1,vertical=1)
+addPlot("M=5, Z=0.02",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="$M=5M_\odot$, Z=0.02")
+endPlots("HR, M=5, Z=0.02")
 
 ## M=constant=5, grid of metallicities
 Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
-fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
-plt.subplots_adjust(wspace=0,hspace=0)
+L = ["$M=M_\odot$","","","","","",""]
+
+ax = setupPlots(horizontal=1,vertical=2)
 for i in range(len(Z)):
     addPlot("M=5, Z="+str(Z[i]),
             detailed=False,
@@ -318,22 +371,24 @@ for i in range(len(Z)):
             yvalues=7,
             ax=ax[0],
             singelTimeInstance=True,timeIndex=1,
-            xlog=True,
+            xlog=False,
             scatter=True,
-            customX=Z[i])
+            customX=Z[i],
+            legendText=L[i])
     addPlot("M=5, Z="+str(Z[i]),
             detailed=False,
             xvalues=30,
             yvalues=8,
             ax=ax[1],
             singelTimeInstance=True,timeIndex=1,
-            xlog=True,
+            xlog=False,
             scatter=True,
-            customX=Z[i])
+            customX=Z[i],
+            legendText=L[i])
 ax[0].set_xlabel('')
-plt.savefig('Metallicity vs T_c, rho_c, grid, M=5.png',bbox_inches='tight',transparent=True)
-fig, ax = plt.subplots(2,1,figsize=(8, 6),sharex=True)
-plt.subplots_adjust(wspace=0,hspace=0)
+endPlots("Metallicity vs T_c, rho_c, grid, M=5")
+
+ax = setupPlots(horizontal=1,vertical=2)
 for i in range(len(Z)):
     addPlot("M=5, Z="+str(Z[i]),
             detailed=False,
@@ -341,27 +396,21 @@ for i in range(len(Z)):
             yvalues=4,
             ax=ax[0],
             singelTimeInstance=True,timeIndex=1,
-            xlog=True,
+            xlog=False,
             scatter=True,
-            customX=Z[i])
+            customX=Z[i],
+            legendText=L[i])
     addPlot("M=5, Z="+str(Z[i]),
             detailed=False,
             xvalues=30,
             yvalues=6,
             ax=ax[1],
             singelTimeInstance=True,timeIndex=1,
-            xlog=True,
+            xlog=False,
             scatter=True,
-            customX=Z[i])
+            customX=Z[i],
+            legendText=L[i])
 ax[0].set_xlabel('')
-plt.legend()
-plt.savefig('Metallicity vs L, T_s, grid, M=5.png',bbox_inches='tight',transparent=True)
-
-## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
-# fig, ax = plt.subplots(1,1,figsize=(8, 6),sharex=True)
-# plt.subplots_adjust(wspace=0,hspace=0)
-# addPlot("M=5, Z=0.02",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="AAA")
-# plt.legend()
-# plt.show()
+endPlots("Metallicity vs L, T_s, grid, M=5")
 
 # ------------------------ #
