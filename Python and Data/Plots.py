@@ -67,8 +67,11 @@ def addPlot(fileDirectory,
             scatter=False,
             flipXaxis=False,
             customX=[-1],
-            legendText="",
-            color="blue"):
+            label="",
+            color="blue",
+            markerSize=5,
+            lineStyle="-",
+            markerStyle="o"):
     """
     Generates the plots using the data files. Specify information and the plots will be drawn.
     A lot of the parameters are optional here.
@@ -87,7 +90,9 @@ def addPlot(fileDirectory,
         - (Boolean) flipXaxis: Flip the x-axis (Useful for HR diagrams).
         - (List[]) customX: Use a custom x-axis (Useful for task 3.2).
         - (String) legendText, Specify the legend text.
-        - (String) Color of the plots.
+        - (String) color: Color of the plots.
+        - (Float) scatterSize: Determines the size of the scatter dots.
+        - (String) linestyle: Line or scatter style.
     Returns:
         - x, y: Values of x and y to be used again.
     """
@@ -257,9 +262,9 @@ def addPlot(fileDirectory,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y,label=legendText,color=color)
+            ax.scatter(x,y,label=label,color=color,marker=markerStyle,s=markerSize)
         else:
-            ax.plot(x,y,label=legendText,color=color)
+            ax.plot(x,y,label=label,color=color,linestyle=lineStyle,marker=markerStyle,markersize=markerSize)
     if detailed==True:
         f = open(full_path+"\\structure_"+str(f'{timeIndex:05}')+".txt", "r")
         data = f.read().split("\n")
@@ -352,68 +357,117 @@ def addPlot(fileDirectory,
         if ylog==True:
             ax.set_yscale("log")
         if scatter==True:
-            ax.scatter(x,y,label=legendText,color=color)
+            ax.scatter(x,y,label=label,color=color)
         else:
-            ax.plot(x,y,label=legendText,color=color)
+            ax.plot(x,y,label=label,color=color)
     return x,y
 # ------------ Add graphs here ------------ #
 ## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
-ax = setupPlots(horizontal=1,vertical=1)
-addPlot("M=5, Z=0.03",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="$M=5M_\odot$, Z=0.02")
-endPlots("HR, M=5, Z=0.03")
+# ax = setupPlots(horizontal=1,vertical=1)
+# x,y = addPlot("M=5, Z=0.001",False,6,4,ax=ax,scatter=True,flipXaxis=True,label="$M=5M_\odot$, Z=0.02",color="blue",markerSize=5)
+# ax.scatter(x[0],y[0],color="black",label="Start")
+# x,y = addPlot("M=50, Z=0.001",False,6,4,ax=ax,scatter=True,flipXaxis=True,label="$M=5M_\odot$, Z=0.02",color="red",markerSize=5)
+# ax.scatter(x[0],y[0],color="black",label="Start")
+# x,y = addPlot("M=1, Z=0.001",False,6,4,ax=ax,scatter=True,flipXaxis=True,label="$M=5M_\odot$, Z=0.02",color="green",markerSize=5)
+# ax.scatter(x[0],y[0],color="black",label="Start")
+# endPlots("HR, M=5, Z=0.01")
 
 # ## M=constant=5, grid of metallicities
-# Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
-# L = ["$M=M_\odot$","","","","","",""]
+Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
+L = ["$M=5M_\odot$","","","","","",""]
+L2 = ["$M=50M_\odot$","","","","","",""]
+ax = setupPlots(horizontal=1,vertical=2)
+for i in range(len(Z)):
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=7,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L[i])
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=8,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L[i])
+    addPlot("M=50, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=7,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L2[i],
+            color="red")
+    addPlot("M=50, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=8,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L2[i],
+            color="red")
+ax[0].set_xlabel('')
+endPlots("Metallicity vs T_c, rho_c, grid, M=[5,50]")
 
-# ax = setupPlots(horizontal=1,vertical=2)
-# for i in range(len(Z)):
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=7,
-#             ax=ax[0],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=False,
-#             scatter=True,
-#             customX=Z[i],
-#             legendText=L[i])
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=8,
-#             ax=ax[1],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=False,
-#             scatter=True,
-#             customX=Z[i],
-#             legendText=L[i])
-# ax[0].set_xlabel('')
-# endPlots("Metallicity vs T_c, rho_c, grid, M=5")
-
-# ax = setupPlots(horizontal=1,vertical=2)
-# for i in range(len(Z)):
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=4,
-#             ax=ax[0],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=False,
-#             scatter=True,
-#             customX=Z[i],
-#             legendText=L[i])
-#     addPlot("M=5, Z="+str(Z[i]),
-#             detailed=False,
-#             xvalues=30,
-#             yvalues=6,
-#             ax=ax[1],
-#             singelTimeInstance=True,timeIndex=1,
-#             xlog=False,
-#             scatter=True,
-#             customX=Z[i],
-#             legendText=L[i])
-# ax[0].set_xlabel('')
-# endPlots("Metallicity vs L, T_s, grid, M=5")
+ax = setupPlots(horizontal=1,vertical=2)
+for i in range(len(Z)):
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=4,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L[i])
+    addPlot("M=5, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=6,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L[i])
+    addPlot("M=50, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=4,
+            ax=ax[0],
+            singelTimeInstance=True,timeIndex=1,
+            xlog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L2[i],
+            color="red")
+    addPlot("M=50, Z="+str(Z[i]),
+            detailed=False,
+            xvalues=30,
+            yvalues=6,
+            ax=ax[1],
+            singelTimeInstance=True,timeIndex=1,
+            ylog=False,
+            scatter=False,
+            customX=Z[i],
+            label=L2[i],
+            color="red")
+ax[0].set_xlabel('')
+endPlots("Metallicity vs L, T_s, grid, M=5")
 
 # ------------------------ #
