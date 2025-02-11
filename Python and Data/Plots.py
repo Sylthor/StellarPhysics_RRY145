@@ -68,7 +68,7 @@ def addPlot(fileDirectory,
             flipXaxis=False,
             customX=[-1],
             legendText="",
-            color="tab:blue"):
+            color="blue"):
     """
     Generates the plots using the data files. Specify information and the plots will be drawn.
     A lot of the parameters are optional here.
@@ -88,6 +88,8 @@ def addPlot(fileDirectory,
         - (List[]) customX: Use a custom x-axis (Useful for task 3.2).
         - (String) legendText, Specify the legend text.
         - (String) Color of the plots.
+    Returns:
+        - x, y: Values of x and y to be used again.
     """
     absolute_path = os.path.dirname(__file__)
     relative_path = fileDirectory
@@ -125,9 +127,9 @@ def addPlot(fileDirectory,
             if dataInstances[i]==3:
                 plotLabels.append("$M$ [$M_\odot$]")
             if dataInstances[i]==4:
-                plotLabels.append("$L$ [$Log_{10}(L/L_\odot$]")
+                plotLabels.append("$L$ [$Log_{10}(L/L_\odot)$]")
             if dataInstances[i]==5:
-                plotLabels.append("$R$ [$Log_{10}(R/R_\odot$]")
+                plotLabels.append("$R$ [$Log_{10}(R/R_\odot)$]")
             if dataInstances[i]==6:
                 plotLabels.append("$T_s$ [$Log_{10}(T_{s}/1K)$]")
             if dataInstances[i]==7:
@@ -353,64 +355,65 @@ def addPlot(fileDirectory,
             ax.scatter(x,y,label=legendText,color=color)
         else:
             ax.plot(x,y,label=legendText,color=color)
+    return x,y
 # ------------ Add graphs here ------------ #
 ## Example: My folder is called "M=5, Z=0,03". I want to create HR-diagram
 ax = setupPlots(horizontal=1,vertical=1)
-addPlot("M=5, Z=0.02",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="$M=5M_\odot$, Z=0.02")
-endPlots("HR, M=5, Z=0.02")
+addPlot("M=5, Z=0.03",False,6,4,ax=ax,scatter=False,flipXaxis=True,legendText="$M=5M_\odot$, Z=0.02")
+endPlots("HR, M=5, Z=0.03")
 
-## M=constant=5, grid of metallicities
-Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
-L = ["$M=M_\odot$","","","","","",""]
+# ## M=constant=5, grid of metallicities
+# Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
+# L = ["$M=M_\odot$","","","","","",""]
 
-ax = setupPlots(horizontal=1,vertical=2)
-for i in range(len(Z)):
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=7,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=True,
-            customX=Z[i],
-            legendText=L[i])
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=8,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=True,
-            customX=Z[i],
-            legendText=L[i])
-ax[0].set_xlabel('')
-endPlots("Metallicity vs T_c, rho_c, grid, M=5")
+# ax = setupPlots(horizontal=1,vertical=2)
+# for i in range(len(Z)):
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=7,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=True,
+#             customX=Z[i],
+#             legendText=L[i])
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=8,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=True,
+#             customX=Z[i],
+#             legendText=L[i])
+# ax[0].set_xlabel('')
+# endPlots("Metallicity vs T_c, rho_c, grid, M=5")
 
-ax = setupPlots(horizontal=1,vertical=2)
-for i in range(len(Z)):
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=4,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=True,
-            customX=Z[i],
-            legendText=L[i])
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=6,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=True,
-            customX=Z[i],
-            legendText=L[i])
-ax[0].set_xlabel('')
-endPlots("Metallicity vs L, T_s, grid, M=5")
+# ax = setupPlots(horizontal=1,vertical=2)
+# for i in range(len(Z)):
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=4,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=True,
+#             customX=Z[i],
+#             legendText=L[i])
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=6,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=True,
+#             customX=Z[i],
+#             legendText=L[i])
+# ax[0].set_xlabel('')
+# endPlots("Metallicity vs L, T_s, grid, M=5")
 
 # ------------------------ #
