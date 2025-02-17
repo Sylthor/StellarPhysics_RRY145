@@ -54,7 +54,7 @@ def endPlots(fileName):
     # legend = plt.legend(fancybox=False, edgecolor="black",loc='center left', bbox_to_anchor=(1, 0.5))
     legend = plt.legend(fancybox=False, edgecolor="black")
     legend.get_frame().set_linewidth(0.5)
-    plt.savefig(fileName+".png",bbox_inches='tight',transparent=True)
+    plt.savefig(fileName+".png",bbox_inches='tight',transparent=False)
     plt.show()
 def addPlot(fileDirectory,
             detailed,
@@ -119,6 +119,7 @@ def addPlot(fileDirectory,
             y = 1-np.array(getColumn(data,11-1))-np.array(getColumn(data,12-1))
         if singelTimeInstance==True:
             x = x[timeIndex]
+            print("Time="+str(getColumn(data,2-1)[timeIndex])+" years")
             y = y[timeIndex]
         if customX != [-1]:
             x = customX
