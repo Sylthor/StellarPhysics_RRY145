@@ -28,7 +28,7 @@ def getColumn(data,data_entry_index):
         - (int) data_entry_index: The index of the column to extract.
     """
     return [float(line.split()[data_entry_index]) for line in data if len(line.split()) > data_entry_index]
-def setupPlots(horizontal,vertical):
+def setupPlots(horizontal,vertical,sharex=True,sharey=True):
     """
     Creates a standardized setup for the plots with a good aspect ration for Overleaf.
     Here one can specify the number of subplots in the image.
@@ -37,7 +37,7 @@ def setupPlots(horizontal,vertical):
         - (int) Number of horizontal subplots.
         - (int) Number of vertical subplots.
     """
-    fig, ax = plt.subplots(vertical,horizontal,figsize=(8,6),sharex=True)
+    fig, ax = plt.subplots(vertical,horizontal,figsize=(8,6),sharex=sharex,sharey=sharey)
     plt.subplots_adjust(wspace=0,hspace=0)
     if(horizontal+vertical>2):
         ax = ax.flatten()
@@ -51,6 +51,7 @@ def endPlots(fileName):
     Args:
         - (String) filename: Specify the name under which the file should be saved as. Do not include ".png"!
     """
+    # legend = plt.legend(fancybox=False, edgecolor="black",loc='center left', bbox_to_anchor=(1, 0.5))
     legend = plt.legend(fancybox=False, edgecolor="black")
     legend.get_frame().set_linewidth(0.5)
     plt.savefig(fileName+".png",bbox_inches='tight',transparent=True)
@@ -131,14 +132,34 @@ def addPlot(fileDirectory,
                 plotLabels.append("$t$ [years]")
             if dataInstances[i]==3:
                 plotLabels.append("$M$ [$M_\odot$]")
+            # if dataInstances[i]==4:
+            #     plotLabels.append("$L$ [$L/L_\odot$]")
+            #     if(i==1):
+            #         y = 10**np.array(y)
+            # if dataInstances[i]==5:
+            #     plotLabels.append("$R$ [$R/R_\odot$]")
+            #     if(i==1):
+            #         y = 10**np.array(y)
+            # if dataInstances[i]==6:
+            #     plotLabels.append("$T_s$ [K]")
+            #     if(i==1):
+            #         y = 10**np.array(y)
+            # if dataInstances[i]==7:
+            #     plotLabels.append("$T_c$ [K]")
+            #     if(i==1):
+            #         y = 10**np.array(y)
+            # if dataInstances[i]==8:
+            #     plotLabels.append(r"$\rho_c$ [kgm$^{-3}$]")
+            #     if(i==1):
+            #         y = 10**np.array(y)
             if dataInstances[i]==4:
                 plotLabels.append("$L$ [$Log_{10}(L/L_\odot)$]")
             if dataInstances[i]==5:
                 plotLabels.append("$R$ [$Log_{10}(R/R_\odot)$]")
             if dataInstances[i]==6:
-                plotLabels.append("$T_s$ [$Log_{10}(T_{s}/1K)$]")
+                plotLabels.append("$T_s$ [$Log_{10}(T_{s}/K)$]")
             if dataInstances[i]==7:
-                plotLabels.append("$T_c$ [$Log_{10}(T_{c}/1K)$]")
+                plotLabels.append("$T_c$ [$Log_{10}(T_{c}/K)$]")
             if dataInstances[i]==8:
                 plotLabels.append(r"$\rho_c$ [$Log_{10}(\rho_{c}/kgm^{-3})$]")
             if dataInstances[i]==9:
@@ -373,101 +394,101 @@ def addPlot(fileDirectory,
 # endPlots("HR, M=5, Z=0.01")
 
 # ## M=constant=5, grid of metallicities
-Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
-L = ["$M=5M_\odot$","","","","","",""]
-L2 = ["$M=50M_\odot$","","","","","",""]
-ax = setupPlots(horizontal=1,vertical=2)
-for i in range(len(Z)):
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=7,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L[i])
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=8,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L[i])
-    addPlot("M=50, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=7,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L2[i],
-            color="red")
-    addPlot("M=50, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=8,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L2[i],
-            color="red")
-ax[0].set_xlabel('')
-endPlots("Metallicity vs T_c, rho_c, grid, M=[5,50]")
+# Z = [0.0001,0.0003,0.001,0.004,0.01,0.02,0.03]
+# L = ["$M=5M_\odot$","","","","","",""]
+# L2 = ["$M=50M_\odot$","","","","","",""]
+# ax = setupPlots(horizontal=1,vertical=2)
+# for i in range(len(Z)):
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=7,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L[i])
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=8,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L[i])
+#     addPlot("M=50, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=7,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L2[i],
+#             color="red")
+#     addPlot("M=50, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=8,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L2[i],
+#             color="red")
+# ax[0].set_xlabel('')
+# endPlots("Metallicity vs T_c, rho_c, grid, M=[5,50]")
 
-ax = setupPlots(horizontal=1,vertical=2)
-for i in range(len(Z)):
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=4,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L[i])
-    addPlot("M=5, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=6,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L[i])
-    addPlot("M=50, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=4,
-            ax=ax[0],
-            singelTimeInstance=True,timeIndex=1,
-            xlog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L2[i],
-            color="red")
-    addPlot("M=50, Z="+str(Z[i]),
-            detailed=False,
-            xvalues=30,
-            yvalues=6,
-            ax=ax[1],
-            singelTimeInstance=True,timeIndex=1,
-            ylog=False,
-            scatter=False,
-            customX=Z[i],
-            label=L2[i],
-            color="red")
-ax[0].set_xlabel('')
-endPlots("Metallicity vs L, T_s, grid, M=5")
+# ax = setupPlots(horizontal=1,vertical=2)
+# for i in range(len(Z)):
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=4,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L[i])
+#     addPlot("M=5, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=6,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L[i])
+#     addPlot("M=50, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=4,
+#             ax=ax[0],
+#             singelTimeInstance=True,timeIndex=1,
+#             xlog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L2[i],
+#             color="red")
+#     addPlot("M=50, Z="+str(Z[i]),
+#             detailed=False,
+#             xvalues=30,
+#             yvalues=6,
+#             ax=ax[1],
+#             singelTimeInstance=True,timeIndex=1,
+#             ylog=False,
+#             scatter=False,
+#             customX=Z[i],
+#             label=L2[i],
+#             color="red")
+# ax[0].set_xlabel('')
+# endPlots("Metallicity vs L, T_s, grid, M=5")
 
 # ------------------------ #
